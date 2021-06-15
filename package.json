@@ -1,0 +1,10 @@
+{
+  "name": "vjs-games",
+  "version": "1.0.0",
+  "description": "games with vanilla js",
+  "main": "index.js",
+  "repository": "git+https://github.com/thilllon/vjs-games.git",
+  "author": "Thilllon",
+  "license": "MIT",
+  "private": true
+}

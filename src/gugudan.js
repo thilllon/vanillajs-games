@@ -13,14 +13,14 @@
     }
   };
 
-  const createOnClick = (answer, label, input) => () => commonLogic(answer, label, input);
+  const createOnClick = (answer, label, input) => () => {
+    commonLogic(answer, label, input);
+  };
 
-  const createOnKeyDown =
-    (answer, label) =>
-    ({ key, target: input }) => {
-      if (key !== 'Enter') return;
-      commonLogic(answer, label, input);
-    };
+  const createOnKeyDown = (answer, label) => (ev) => {
+    if (ev.key !== 'Enter') return;
+    commonLogic(answer, label, ev.target);
+  };
 
   const contructElements = () => {
     const label = document.getElementById('gugudan__label');

@@ -1,19 +1,17 @@
 (() => {
   const idPrefix = 'numberbaseball';
-  let digits;
-  let ansArr;
-  const initialize = (inputdigits = 4) => {
-    digits = inputdigits;
-    const ans = Math.floor(Math.random() * 10 ** digits) + 1;
-    ansArr = [...String(ans)];
+
+  const initialize = (digits) => {
+    const max = 10 ** digits;
+    const min = 10 ** (digits - 1);
+    return [...String(Math.floor(Math.random() * (max - min)) + min)];
   };
 
-  const onKeyDown = (label) => (ev) => {
-    if (ev.key !== 'Enter') return;
-    const inputValue = ev.target.value;
+  const commonLogic = (ansArr, label, input) => {
+    const inputValue = input.value;
     const inputArr = [...String(inputValue)];
-    if (inputArr.length !== 4) return;
-    ev.target.value = '';
+    if (inputArr.length !== ansArr.length) return;
+    input.value = '';
     const result = ansArr.reduce(
       (prv, num, idx) => {
         const newPrv = { ...prv };
@@ -27,29 +25,33 @@
       { strike: 0, ball: 0 }
     );
 
-    if (result.strike === digits) {
-      label.textContent = `Homerun!`;
+    if (result.strike === ansArr.length) {
+      label.textContent = `${ansArr.join('')} Homerun!`;
     } else {
-      label.textContent = `${result.strike} strike, ${result.ball} ball`;
+      label.textContent = `${ansArr.join('')} ${result.strike} strike, ${result.ball} ball`;
     }
   };
-  const onClick = (label) => (ev) => {
-    //
+  const createOnKeyDown = (ansArr, label) => (ev) => {
+    if (ev.key !== 'Enter') return;
+    commonLogic(ansArr, label, ev.target);
   };
-  const onClickNew = (ev) => {
-    initialize();
+  const createOnClick = (ansArr, label, input) => () => {
+    commonLogic(ansArr, label, input);
   };
 
   const contructElements = () => {
+    const digits = 4;
+
     const label = document.getElementById(`${idPrefix}__label`);
     const input = document.getElementById(`${idPrefix}__input`);
-    label.textContent = `${digits}자리` + ans;
-    // input.setAttribute('value', digits);
-    input.setAttribute('max', '9999');
-    input.setAttribute('min', 1000);
-    input.addEventListener('keydown', onKeyDown(label));
-    input.addEventListener('click', onClick(label));
-    document.getElementById('numberbaseball__new').addEventListener('click', onClickNew);
+    const button = document.getElementById('numberbaseball__button');
+    const ansArr = initialize(digits);
+    label.textContent = `${ansArr.join('')} ${digits} 자리`;
+
+    input.setAttribute('max', 10 ** digits - 1);
+    input.setAttribute('min', 10 ** (digits - 1));
+    input.addEventListener('keydown', createOnKeyDown(ansArr, label));
+    button.addEventListener('click', createOnClick(ansArr, label, input));
   };
   // ******************************
   // ******************************
